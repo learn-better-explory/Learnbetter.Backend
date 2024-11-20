@@ -5,6 +5,7 @@ import com.learnbetter.LearnBetterApi.data.db.User;
 import com.learnbetter.LearnBetterApi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -27,7 +28,6 @@ public class UserController {
 
     @GetMapping(value = "/{id}")
     public User getUser(@PathVariable long id, Principal principal){
-
         return userService.getUser(id);
     }
 

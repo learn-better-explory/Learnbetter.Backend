@@ -6,6 +6,7 @@ import com.learnbetter.LearnBetterApi.data.db.UserStatus;
 import com.learnbetter.LearnBetterApi.data.repositories.UserRepo;
 import com.learnbetter.LearnBetterApi.data.repositories.UserStatusRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +19,7 @@ public class UserService {
     @Autowired
     private SecurityConfig securityConfig;
 
+    @PostAuthorize("returnObject.getUsername() == authentication.name")
     public User getUser(long id){
         return userRepo.findById(id).orElse(null);
     }
