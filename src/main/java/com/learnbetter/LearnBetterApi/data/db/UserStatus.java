@@ -1,7 +1,10 @@
 package com.learnbetter.LearnBetterApi.data.db;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "user_status")
@@ -12,7 +15,7 @@ import lombok.*;
 public class UserStatus {
 
     @Id
-    @SequenceGenerator(name = "us_generator", sequenceName = "us_generator", allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(name = "us_generator", sequenceName = "us_generator", allocationSize = 1)
     @GeneratedValue( strategy = GenerationType.SEQUENCE,generator = "us_generator")
     @Column(name = "us_id")
     private long id;

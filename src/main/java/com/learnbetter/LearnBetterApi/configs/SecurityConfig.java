@@ -1,10 +1,6 @@
 package com.learnbetter.LearnBetterApi.configs;
 
-import com.learnbetter.LearnBetterApi.data.UserPrincipal;
 import com.learnbetter.LearnBetterApi.services.MyUserDetailsService;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.Builder;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,12 +14,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -31,19 +25,19 @@ import org.springframework.security.web.access.expression.WebExpressionAuthoriza
 public class SecurityConfig {
 
     @Autowired
-    private WebSecurity webSecurity;
+    private JwtFilter jwtFilter;
+
 
     @Bean
     public SecurityFilterChain getChain(HttpSecurity http) throws Exception {
-
-
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer ->
-                        customizer.requestMatchers("/register").permitAll()
+                        customizer.requestMatchers("/api/v1/register", "/api/v1/login").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
