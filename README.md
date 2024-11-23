@@ -20,7 +20,7 @@ This api endpoint is for registering new users. A client has to send a POST requ
  * ***400*** - on a bad request, this means the username has illegal characters in it (like spaces " ") or the email is incorrect (is without @ or dots in the site part) or the user already exists in the database. The details for why there was an error should be written in the response body.
 
 ## /login
-This is the api endpoint for login in for alreadu existsing users. If successful it should return a JWT token, which the client has to save and for every other request should give it in the ***Bearer*** part of the http request header.A client has to send a POST request with minimal info that is below:
+This is the api endpoint for login in for alreadu existsing users. If successful it should return a JWT token, which the client has to save and for every other request should give it in the ***Authorization*** part of the http request header. A client has to send a POST request with minimal info that is below:
 ```
 {   
     "username": "Example",
