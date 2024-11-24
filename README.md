@@ -11,8 +11,7 @@ This api endpoint is for registering new users. A client has to send a POST requ
 {   
     "username": "Example",
     "password": "Password",
-    "email": "example@example.com",
-    "streak": 0
+    "email": "example@example.com"
 }
 ```
 ### Responses

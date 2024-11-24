@@ -70,6 +70,7 @@ public class UserService {
         UserStatus userStatus = new UserStatus();
         user.setStatus(userStatus);
         user.setPassword(securityConfig.getPasswordEncoder().encode(user.getPassword()));
+        user.setStreak(0);
         userRepo.save(user);
         userStatusRepo.save(userStatus);
         return user;
