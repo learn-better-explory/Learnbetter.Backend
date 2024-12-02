@@ -73,8 +73,8 @@ public class UserService {
         user.setStatus(userStatus);
         user.setPassword(securityConfig.getPasswordEncoder().encode(user.getPassword()));
         user.setStreak(0);
-        userRepo.save(user);
         userStatusRepo.save(userStatus);
+        userRepo.save(user);
         return user;
     }
 
