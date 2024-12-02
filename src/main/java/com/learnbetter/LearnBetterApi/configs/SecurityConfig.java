@@ -1,7 +1,13 @@
 package com.learnbetter.LearnBetterApi.configs;
 
+import com.learnbetter.LearnBetterApi.data.db.DefinitionsTable;
+import com.learnbetter.LearnBetterApi.data.db.WordDefPK;
+import com.learnbetter.LearnBetterApi.data.db.WordDefinition;
+import com.learnbetter.LearnBetterApi.data.repositories.DefinitionsTableRepo;
+import com.learnbetter.LearnBetterApi.data.repositories.WordDefinitionsRepo;
 import com.learnbetter.LearnBetterApi.services.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,14 +24,23 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import java.util.ArrayList;
 
 @Configuration
 @EnableWebSecurity
+@EnableWebMvc
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
     @Autowired
     private JwtFilter jwtFilter;
+
+    @Autowired
+    private DefinitionsTableRepo definitionsTableRepo;
+    @Autowired
+    private WordDefinitionsRepo wordsRepo;
 
 
     @Bean
@@ -41,6 +56,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
+
 
     @Bean
     public BCryptPasswordEncoder getPasswordEncoder(){

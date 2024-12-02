@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = LearnBetterApiApplication.API_PATH)
 public class LoginController {
@@ -18,6 +20,12 @@ public class LoginController {
     public LoginController(UserService userService) {
         this.userService = userService;
 
+    }
+
+    @GetMapping(value = "/users-test")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<User> getUsers(){
+        return userService.getUsers();
     }
 
     @PostMapping(value = "/login")

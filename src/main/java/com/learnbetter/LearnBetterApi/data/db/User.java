@@ -20,7 +20,7 @@ public class User {
     private String password;
     private String email;
     private int streak;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "us_id")
     private UserStatus status;
 

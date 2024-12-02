@@ -16,6 +16,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -74,6 +76,10 @@ public class UserService {
         userRepo.save(user);
         userStatusRepo.save(userStatus);
         return user;
+    }
+
+    public List<User> getUsers(){
+        return userRepo.findAll();
     }
 
     private boolean verifyUserData(User user){
