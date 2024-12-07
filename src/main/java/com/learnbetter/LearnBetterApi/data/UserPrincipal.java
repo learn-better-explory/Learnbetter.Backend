@@ -14,11 +14,11 @@ import java.util.List;
 public class UserPrincipal implements UserDetails, Principal {
 
     private User user;
-    public long userNumber;
+    public long id;
 
     public UserPrincipal(User user){
         this.user = user;
-        this.userNumber = user.getId();
+        this.id = user.getId();
     }
 
     @Override

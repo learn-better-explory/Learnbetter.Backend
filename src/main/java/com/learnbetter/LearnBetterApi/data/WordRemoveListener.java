@@ -8,7 +8,7 @@ public class WordRemoveListener {
 
     @PreRemove
     public void wordPreRemove(WordDefinition word){
-        word.getDefTable().removeWordDefinition(word);
+        word.getDefTable().decrementDefinitionsCount();
         System.out.println("Removed lololo");
     }
 }

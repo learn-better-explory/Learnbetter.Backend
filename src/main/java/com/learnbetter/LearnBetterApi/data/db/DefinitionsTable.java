@@ -1,5 +1,6 @@
 package com.learnbetter.LearnBetterApi.data.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.learnbetter.LearnBetterApi.data.WordRemoveListener;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,24 +9,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Getter
 @Entity
 @Table(name = "definitions_table")
 @EntityListeners(value=WordRemoveListener.class)
-@Getter
-@Setter
 @ToString
 public class DefinitionsTable {
 
     @Id
     private UUID tableId;
+    @Setter
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "owner")
     private User owner;
+    @Setter
     private String tableName;
+    @Setter
     private String tableDescription;
     private int definitionsCount;
 
-    @Transient
+    @OneToMany(mappedBy = "defTable", fetch = FetchType.EAGER)
     private List<WordDefinition> words;
 
     public DefinitionsTable(User owner, String tableName, String tableDescription) {
@@ -33,8 +36,8 @@ public class DefinitionsTable {
         this.owner = owner;
         this.tableName = tableName;
         this.tableDescription = tableDescription;
-        this.definitionsCount = 0;
         this.words = new ArrayList<>();
+        this.definitionsCount = 0;
     }
 
     public DefinitionsTable(UUID tableId, String tableDescription, User owner, String tableName, int definitionsCount) {
@@ -49,33 +52,21 @@ public class DefinitionsTable {
     public DefinitionsTable() {
         this.tableId = generateNewUuid();
         this.words = new ArrayList<>();
+        this.definitionsCount = 0;
     }
 
     private UUID generateNewUuid(){
         return UUID.randomUUID();
     }
 
-    public void addWordDefinition(WordDefinition wordDefinition){
-        this.words.add(wordDefinition);
-        this.definitionsCount++;
-        wordDefinition.setWordId(definitionsCount);
+
+    @JsonIgnore
+    public int getDefinitionsCountAndIncrement(){
+        return this.definitionsCount++;
     }
 
-    public void removeWordDefinition(WordDefinition wordDefinition){
-        this.words.remove(wordDefinition);
-        int wordId = wordDefinition.getWordId();
-        if (wordId != this.definitionsCount) {
-            for (int i = wordId; i < this.definitionsCount; i++) {
-                this.words.get(i).setWordId(i);
-            }
-        }
+    public void decrementDefinitionsCount(){
         this.definitionsCount--;
-
     }
-
-    public void incrementDefinitionsCount(){
-        this.definitionsCount++;
-    }
-
 
 }

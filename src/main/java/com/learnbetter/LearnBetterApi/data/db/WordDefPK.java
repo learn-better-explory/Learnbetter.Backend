@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,12 +16,12 @@ import java.util.Objects;
 public class WordDefPK implements Serializable {
 
     private Integer wordId;
-    private DefinitionsTable defTable;
+    private UUID tableId;
 
 
     @Override
     public int hashCode() {
-        return Objects.hash(wordId, defTable);
+        return Objects.hash(wordId, tableId);
     }
 }
 
