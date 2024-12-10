@@ -38,18 +38,22 @@ public class JwtService {
 
 
     public boolean verify(String token, UserDetails userDetails){
+        System.out.println("v " + Arrays.toString(getKey().getEncoded()));
         Claims claims = getClaims(token);
 
         return claims.getSubject().equals(userDetails.getUsername()) && claims.getIssuedAt().before(new Date());
     }
 
     public String getUsername(String token){
+        System.out.println("u    " + Arrays.toString(getKey().getEncoded()));
+        System.out.println("u2  " + Arrays.toString(getKey().getEncoded()));
         Claims claims = getClaims(token);
 
         return claims.getSubject();
     }
 
     public String generateToken(UserDetails userDetails){
+        System.out.println("s " + Arrays.toString(getKey().getEncoded()));
         return Jwts
                 .builder()
                 .subject(userDetails.getUsername())

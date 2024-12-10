@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -125,12 +124,12 @@ public class LoginControllerTests {
     }
 
     @Test
-    @DisplayName("Tests correct login. Should return code 202")
+    @DisplayName("Tests correct login. Should return code 200")
     public void testCorrectLogin() throws Exception{
         User user = new User("Test", "TestPassword", "test@example.com", 0, null);
 
         mockMvc.perform(getPostRequestForUser("/api/v1/login", user))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
     }
 
     @Test

@@ -1,7 +1,6 @@
 package com.learnbetter.LearnBetterApi.data.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.learnbetter.LearnBetterApi.data.WordRemoveListener;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,14 +11,13 @@ import java.util.UUID;
 @Getter
 @Entity
 @Table(name = "definitions_table")
-@EntityListeners(value=WordRemoveListener.class)
 @ToString
 public class DefinitionsTable {
 
     @Id
     private UUID tableId;
     @Setter
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "owner")
     private User owner;
     @Setter

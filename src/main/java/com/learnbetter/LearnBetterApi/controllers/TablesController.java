@@ -5,10 +5,13 @@ import com.learnbetter.LearnBetterApi.data.db.DefinitionsTable;
 import com.learnbetter.LearnBetterApi.data.db.User;
 import com.learnbetter.LearnBetterApi.data.db.WordDefinition;
 import com.learnbetter.LearnBetterApi.data.repositories.UserRepo;
+import com.learnbetter.LearnBetterApi.exceptions.DefinitionsTableException;
+import com.learnbetter.LearnBetterApi.exceptions.DoesntHavePermission;
 import com.learnbetter.LearnBetterApi.exceptions.UserNotFoundException;
 import com.learnbetter.LearnBetterApi.services.TableService;
 import com.learnbetter.LearnBetterApi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,12 +32,9 @@ public class TablesController {
         this.userService = userService;
     }
 
-    @GetMapping("/tables")
-    public List<DefinitionsTable> getAllTables(){
-        return tableService.getAll();
-    }
-
+    @PreAuthorize("#id == principal.id")
     @GetMapping("/{id}/tables")
+    @ResponseStatus(HttpStatus.OK)
     public List<DefinitionsTable> getDefinitionsTablesUser(@PathVariable long id){
         User user = getUserFromId(id);
 
@@ -43,26 +43,27 @@ public class TablesController {
 
     @PreAuthorize("#id == principal.id")
     @PostMapping("/{id}/addTable")
+    @ResponseStatus(HttpStatus.CREATED)
     public DefinitionsTable addDefinitionsTable(@PathVariable long id, @RequestBody DefinitionsTable definitionsTable){
         User user = getUserFromId(id);
-
         definitionsTable.setOwner(user);
 
-        tableService.addDefinitionsTableUser(user, definitionsTable);
+        tableService.addDefinitionsTableUser(definitionsTable);
         return definitionsTable;
     }
 
     @PreAuthorize("#id == principal.id")
     @PostMapping("/{id}/{tableId}/addDefWord")
+    @ResponseStatus(HttpStatus.CREATED)
     public void addWordDefinition(@PathVariable long id, @PathVariable UUID tableId, @RequestBody WordDefinition wordDefinition){
         User user = getUserFromId(id);
         DefinitionsTable definitionsTable = tableService.getDefinitionsTableFromId(tableId);
 
         if(definitionsTable == null){
-            throw new UserNotFoundException("");
+            throw new DefinitionsTableException();
         }
-        if(!definitionsTable.getOwner().equals(user)){
-            throw new UserNotFoundException("");
+        if(definitionsTable.getOwner().getId() != id || !definitionsTable.getOwner().equals(user)){
+            throw new DoesntHavePermission();
         }
         wordDefinition.setDefTable(definitionsTable);
 
@@ -76,7 +77,6 @@ public class TablesController {
         }
 
         return user;
-
     }
 
 }

@@ -23,13 +23,13 @@ public class LoginController {
     }
 
     @GetMapping(value = "/users-test")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public List<User> getUsers(){
         return userService.getUsers();
     }
 
     @PostMapping(value = "/login")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public String login(@RequestBody User user){
         return userService.loginUser(user);
     }

@@ -1,9 +1,6 @@
 package com.learnbetter.LearnBetterApi;
 
-import com.learnbetter.LearnBetterApi.exceptions.PasswordDoesntMatchException;
-import com.learnbetter.LearnBetterApi.exceptions.UserAlreadyExistsException;
-import com.learnbetter.LearnBetterApi.exceptions.UserNotFoundException;
-import com.learnbetter.LearnBetterApi.exceptions.WrongRegisterDataException;
+import com.learnbetter.LearnBetterApi.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,5 +26,20 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<?> handleUserExists(){
         return new ResponseEntity<>("User already exists", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DoesntHavePermission.class)
+    public ResponseEntity<?> handleNoPermission(){
+        return new ResponseEntity<>("The user doesn't have permission for this table", HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(DefinitionsTableException.class)
+    public ResponseEntity<?> handleNoTable(){
+        return new ResponseEntity<>("This table doesn't exist", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TitleTooLongException.class)
+    public ResponseEntity<?> handleTitleTooLong(TitleTooLongException exception){
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
