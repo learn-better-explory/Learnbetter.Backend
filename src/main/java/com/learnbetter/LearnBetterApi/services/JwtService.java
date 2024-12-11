@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
@@ -38,22 +37,18 @@ public class JwtService {
 
 
     public boolean verify(String token, UserDetails userDetails){
-        System.out.println("v " + Arrays.toString(getKey().getEncoded()));
         Claims claims = getClaims(token);
 
         return claims.getSubject().equals(userDetails.getUsername()) && claims.getIssuedAt().before(new Date());
     }
 
     public String getUsername(String token){
-        System.out.println("u    " + Arrays.toString(getKey().getEncoded()));
-        System.out.println("u2  " + Arrays.toString(getKey().getEncoded()));
         Claims claims = getClaims(token);
 
         return claims.getSubject();
     }
 
     public String generateToken(UserDetails userDetails){
-        System.out.println("s " + Arrays.toString(getKey().getEncoded()));
         return Jwts
                 .builder()
                 .subject(userDetails.getUsername())

@@ -16,15 +16,17 @@ public class DefinitionsTable {
 
     @Id
     private UUID tableId;
+    @Column( name = "owner")
+    private long ownerId;
     @Setter
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner")
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "owner", insertable = false, updatable = false)
     private User owner;
     @Setter
     private String tableName;
     @Setter
     private String tableDescription;
-    private int definitionsCount;
 
     @OneToMany(mappedBy = "defTable", fetch = FetchType.EAGER)
     private List<WordDefinition> words;
@@ -35,7 +37,6 @@ public class DefinitionsTable {
         this.tableName = tableName;
         this.tableDescription = tableDescription;
         this.words = new ArrayList<>();
-        this.definitionsCount = 0;
     }
 
     public DefinitionsTable(UUID tableId, String tableDescription, User owner, String tableName, int definitionsCount) {
@@ -43,28 +44,15 @@ public class DefinitionsTable {
         this.tableDescription = tableDescription;
         this.owner = owner;
         this.tableName = tableName;
-        this.definitionsCount = definitionsCount;
         this.words = new ArrayList<>();
-    }
-
-    public DefinitionsTable() {
-        this.tableId = generateNewUuid();
-        this.words = new ArrayList<>();
-        this.definitionsCount = 0;
     }
 
     private UUID generateNewUuid(){
         return UUID.randomUUID();
     }
 
-
-    @JsonIgnore
-    public int getDefinitionsCountAndIncrement(){
-        return this.definitionsCount++;
-    }
-
-    public void decrementDefinitionsCount(){
-        this.definitionsCount--;
+    public int getDefinitionsCount(){
+        return this.words.size();
     }
 
 }

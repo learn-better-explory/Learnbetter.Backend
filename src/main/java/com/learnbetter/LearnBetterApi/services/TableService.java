@@ -5,9 +5,9 @@ import com.learnbetter.LearnBetterApi.data.db.User;
 import com.learnbetter.LearnBetterApi.data.db.WordDefinition;
 import com.learnbetter.LearnBetterApi.data.repositories.DefinitionsTableRepo;
 import com.learnbetter.LearnBetterApi.data.repositories.WordDefinitionsRepo;
+import com.learnbetter.LearnBetterApi.exceptions.DefinitionWordNotExists;
 import com.learnbetter.LearnBetterApi.exceptions.TitleTooLongException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,18 +45,42 @@ public class TableService {
         definitionsTableRepo.save(table);
     }
 
+
     public void addWordDefinition(WordDefinition wordDefinition){
         wordsRepo.save(wordDefinition);
     }
-    //TODO: finish this
-    public void removeWordDefinition(WordDefinition wordDefinition){
+
+    public void updateWordDefinition(int orderTable, UUID tableId,WordDefinition newWordDefinition){
+        WordDefinition wordDefinition = wordsRepo.findByOrderInTableAndTableId(orderTable, tableId);
+        if(wordDefinition == null){
+            throw new DefinitionWordNotExists();
+        }
+
+        if(newWordDefinition.getWord() != null) wordDefinition.setWord(newWordDefinition.getWord());
+        if(newWordDefinition.getDescription() != null) wordDefinition.setDescription(newWordDefinition.getDescription());
+        wordsRepo.save(wordDefinition);
+    }
+
+    public void removeWordDefinition(UUID tableId ,int orderTable){
+        WordDefinition wordDefinition;
+        wordDefinition = wordsRepo.findByOrderInTableAndTableId(orderTable, tableId);
+
+        if(wordDefinition == null){
+            throw new DefinitionWordNotExists();
+        }
+
         DefinitionsTable definitionsTable = wordDefinition.getDefTable();
-        int oldId = wordDefinition.getWordId();
+        int oldOrder = wordDefinition.getOrderInTable();
 
         wordsRepo.delete(wordDefinition);
 
-        if(oldId == definitionsTable.getDefinitionsCount()){
-            definitionsTable.decrementDefinitionsCount();
+        definitionsTable.getWords().remove(wordDefinition);
+        if(oldOrder != definitionsTable.getDefinitionsCount()){
+            for(int i=oldOrder; i < definitionsTable.getWords().size(); i++){
+                WordDefinition word = definitionsTable.getWords().get(i);
+                word.setOrderInTable(word.getOrderInTable()-1);
+                wordsRepo.save(word);
+            }
         }
 
     }
