@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = LearnBetterApiApplication.API_PATH)
@@ -30,8 +31,8 @@ public class LoginController {
 
     @PostMapping(value = "/login")
     @ResponseStatus(HttpStatus.OK)
-    public String login(@RequestBody User user){
-        return userService.loginUser(user);
+    public Map<String, String> login(@RequestBody User user){
+        return Map.of("token",userService.loginUser(user));
     }
 
     @PostMapping(value = "/register")
