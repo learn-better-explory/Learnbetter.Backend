@@ -18,29 +18,29 @@ public class TableService {
 
     private DefinitionsTableRepo definitionsTableRepo;
     private WordDefinitionsRepo wordsRepo;
+    private UserService userService;
 
     @Autowired
-    public TableService(DefinitionsTableRepo definitionsTableRepo, WordDefinitionsRepo wordsRepo){
+    public TableService(DefinitionsTableRepo definitionsTableRepo, WordDefinitionsRepo wordsRepo, UserService userService){
         this.definitionsTableRepo = definitionsTableRepo;
         this.wordsRepo = wordsRepo;
+        this.userService = userService;
     }
 
-    public List<DefinitionsTable> getAll(){
-        return definitionsTableRepo.findAll();
-    }
-
-    public List<DefinitionsTable> getUserDefinitionsTables(User user){
-        return definitionsTableRepo.findByOwner(user);
+    public List<DefinitionsTable> getUserDefinitionsTables(long userId){
+        return definitionsTableRepo.findByOwner(userService.getUser(userId));
     }
 
     public DefinitionsTable getDefinitionsTableFromId(UUID uuid){
         return definitionsTableRepo.findById(uuid).orElse(null);
     }
 
-    public void addDefinitionsTableUser(DefinitionsTable table){
+    public void addDefinitionsTableUser(long userId ,DefinitionsTable table){
         if(table.getTableName().length() > 100){
             throw new TitleTooLongException("The title for the table " + table.getTableId() + " is too long!");
         }
+        User user = userService.getUser(userId);
+        table.setOwner(user);
 
         definitionsTableRepo.save(table);
     }

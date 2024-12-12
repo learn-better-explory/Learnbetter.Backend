@@ -6,7 +6,7 @@ For authorization, we are using JWT so for authorization for most of the api url
 (Every path starts with /api/v1)
 
 ## /register (POST)
-This api endpoint is for registering new users. A client has to send a POST request with the user data fromatted like:
+This endpoint is for registering new users. The data should be formated like:
 ```
 {   
     "username": "Example",
@@ -14,9 +14,12 @@ This api endpoint is for registering new users. A client has to send a POST requ
     "email": "example@example.com"
 }
 ```
-### Responses
+### Response codes
  * ***201*** - when the user is successfully created, will return the created user in the body of the request.
  * ***400*** - on a bad request, this means the username has illegal characters in it (like spaces " ") or the email is incorrect (is without @ or dots in the site part) or the user already exists in the database. The details for why there was an error should be written in the response body.
+
+### Response
+Returns the created user.
 
 ## /login (POST)
 This is the api endpoint for login in for already existing users. If successful it should return a JWT token, which the client has to save and for every other request should give it in the ***Authorization*** part of the http request header. A client has to send a POST request with minimal info that is below:
@@ -26,7 +29,17 @@ This is the api endpoint for login in for already existing users. If successful 
     "password": "Password",
 }
 ```
-### Responses
+### Response codes
  * ***202*** - when the user is successfully authenticated based on the info in the request body. It will return a JWT token for every other authentication request for this site.
  * ***400*** - when the user provided doesn't exist in the database of the application.
  * ***403*** - when the password provided doesn't match the password stored in the database.
+ * 
+### Response
+Returns the Authentication token for this user and their id in the format showed below.
+The Authorization token should be put in the ***Authorization*** header with format "Bearer <token>"
+```
+{
+    "token": "Token",
+    "id": 1
+}
+```

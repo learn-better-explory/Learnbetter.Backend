@@ -2,6 +2,7 @@ package com.learnbetter.LearnBetterApi.controllers;
 
 import com.learnbetter.LearnBetterApi.LearnBetterApiApplication;
 import com.learnbetter.LearnBetterApi.data.db.User;
+import com.learnbetter.LearnBetterApi.exceptions.UserNotFoundException;
 import com.learnbetter.LearnBetterApi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,8 +32,13 @@ public class LoginController {
 
     @PostMapping(value = "/login")
     @ResponseStatus(HttpStatus.OK)
-    public Map<String, String> login(@RequestBody User user){
-        return Map.of("token",userService.loginUser(user));
+    public Map<String, Object> login(@RequestBody User user){
+        User realUser = userService.getUserByUsername(user.getUsername());
+        if(realUser == null){
+            throw new UserNotFoundException("User not found!");
+        }
+
+        return Map.of("token",userService.loginUser(user), "id" , realUser.getId());
     }
 
     @PostMapping(value = "/register")

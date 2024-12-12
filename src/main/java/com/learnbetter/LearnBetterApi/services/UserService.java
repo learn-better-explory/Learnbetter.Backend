@@ -10,14 +10,13 @@ import com.learnbetter.LearnBetterApi.exceptions.PasswordDoesntMatchException;
 import com.learnbetter.LearnBetterApi.exceptions.UserAlreadyExistsException;
 import com.learnbetter.LearnBetterApi.exceptions.UserNotFoundException;
 import com.learnbetter.LearnBetterApi.exceptions.WrongRegisterDataException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -44,13 +43,26 @@ public class UserService {
 
     @PostAuthorize("returnObject.getUsername() == authentication.name")
     public User getUser(long id){
-        return userRepo.findById(id).orElse(null);
+        User user = userRepo.findById(id).orElse(null);
+        if(user == null){
+            throw new UserNotFoundException("User with id " + id + " not found!");
+        }
+
+        return user;
+    }
+
+    public User getUserByUsername(String username){
+        User user;
+        try{
+            user = userRepo.findByUsername(username);
+        }catch (EntityNotFoundException e){
+            return null;
+        }
+        return user;
     }
 
     public String loginUser(User user){
-        User foundUser = userRepo.findByUsername(user.getUsername());
-        if(foundUser == null)
-            throw new UserNotFoundException("The user with name " + user.getUsername() + " not found!");
+        User foundUser = getUserByUsername(user.getUsername());
         if(!securityConfig.getPasswordEncoder().matches(user.getPassword(), foundUser.getPassword()))
             throw new PasswordDoesntMatchException("The password for the user " + user.getId() + " isn't correct!");
 

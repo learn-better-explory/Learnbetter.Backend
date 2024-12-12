@@ -2,20 +2,17 @@ package com.learnbetter.LearnBetterApi.controllers;
 
 import com.learnbetter.LearnBetterApi.LearnBetterApiApplication;
 import com.learnbetter.LearnBetterApi.data.db.DefinitionsTable;
-import com.learnbetter.LearnBetterApi.data.db.User;
 import com.learnbetter.LearnBetterApi.data.db.WordDefinition;
 import com.learnbetter.LearnBetterApi.exceptions.DefinitionsTableException;
 import com.learnbetter.LearnBetterApi.exceptions.DoesntHavePermission;
-import com.learnbetter.LearnBetterApi.exceptions.UserNotFoundException;
 import com.learnbetter.LearnBetterApi.services.TableService;
-import com.learnbetter.LearnBetterApi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -25,20 +22,16 @@ public class TablesController {
 
 
     private TableService tableService;
-    private UserService userService;
 
     @Autowired
-    public TablesController(TableService tableService, UserService userService){
+    public TablesController(TableService tableService){
         this.tableService = tableService;
-        this.userService = userService;
     }
 
     @GetMapping("/{id}/tables")
     @ResponseStatus(HttpStatus.OK)
     public List<DefinitionsTable> getDefinitionsTablesUser(@PathVariable long id){
-        User user = getUserFromId(id);
-
-        return tableService.getUserDefinitionsTables(user);
+        return tableService.getUserDefinitionsTables(id);
     }
 
     @GetMapping("/{id}/{tableId}")
@@ -52,12 +45,10 @@ public class TablesController {
 
     @PostMapping("/{id}/addTable")
     @ResponseStatus(HttpStatus.CREATED)
-    public UUID addDefinitionsTable(@PathVariable long id, @RequestBody DefinitionsTable definitionsTable){
-        User user = getUserFromId(id);
-        definitionsTable.setOwner(user);
-        tableService.addDefinitionsTableUser(definitionsTable);
+    public Map<String, UUID> addDefinitionsTable(@PathVariable long id, @RequestBody DefinitionsTable definitionsTable){
+        tableService.addDefinitionsTableUser(id, definitionsTable);
 
-        return definitionsTable.getTableId();
+        return Map.of("tableId", definitionsTable.getTableId());
     }
 
     @DeleteMapping("/{id}/{tableId}")
@@ -73,7 +64,6 @@ public class TablesController {
     @ResponseStatus(HttpStatus.OK)
     public void updateDefinitionsTable(@PathVariable long id, @PathVariable UUID tableId, @RequestBody DefinitionsTable definitionsTable){
         DefinitionsTable checkDefinitionsTable = tableService.getDefinitionsTableFromId(tableId);
-        System.out.println(checkDefinitionsTable);
         checkDefTableCorrect(id, checkDefinitionsTable);
 
         tableService.updateDefinitionsTable(tableId, definitionsTable);
@@ -120,13 +110,5 @@ public class TablesController {
     }
 
 
-    private User getUserFromId(long id){
-        User user = userService.getUser(id);
-        if(user == null){
-            throw new UserNotFoundException("User with id " + id + " not found!");
-        }
-
-        return user;
-    }
 
 }

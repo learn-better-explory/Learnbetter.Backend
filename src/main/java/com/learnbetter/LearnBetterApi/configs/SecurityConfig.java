@@ -1,13 +1,10 @@
 package com.learnbetter.LearnBetterApi.configs;
 
-import com.learnbetter.LearnBetterApi.data.db.DefinitionsTable;
-import com.learnbetter.LearnBetterApi.data.db.WordDefPK;
-import com.learnbetter.LearnBetterApi.data.db.WordDefinition;
 import com.learnbetter.LearnBetterApi.data.repositories.DefinitionsTableRepo;
 import com.learnbetter.LearnBetterApi.data.repositories.WordDefinitionsRepo;
 import com.learnbetter.LearnBetterApi.services.MyUserDetailsService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,14 +22,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.ArrayList;
 
 @Configuration
 @EnableWebSecurity
-@EnableWebMvc
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
@@ -60,10 +54,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
+    public WebMvcConfigurer corsConfigure() {
         return new WebMvcConfigurer() {
             @Override
-            public void addCorsMappings(CorsRegistry registry) {
+            public void addCorsMappings(@NotNull CorsRegistry registry) {
                 registry.addMapping("/**").allowedOrigins("http://localhost:5173");
             }
         };

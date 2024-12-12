@@ -30,6 +30,7 @@ public class DefinitionsTable {
     @OneToMany(mappedBy = "defTable", fetch = FetchType.EAGER)
     private List<WordDefinition> words;
 
+    @SuppressWarnings("unused")
     public DefinitionsTable(){
         this.tableId = generateNewUuid();
         this.words = new ArrayList<>();
@@ -43,7 +44,7 @@ public class DefinitionsTable {
         this.words = new ArrayList<>();
     }
 
-    public DefinitionsTable(UUID tableId, String tableDescription, User owner, String tableName, int definitionsCount) {
+    public DefinitionsTable(UUID tableId, String tableDescription, User owner, String tableName) {
         this.tableId = tableId;
         this.tableDescription = tableDescription;
         this.owner = owner;
@@ -55,13 +56,14 @@ public class DefinitionsTable {
         return UUID.randomUUID();
     }
 
+    @SuppressWarnings("unused")
     public void setOwner(User owner){
         this.owner = owner;
         this.ownerId = owner.getId();
     }
 
     public int getDefinitionsCount(){
-        return this.words.size();
+        return this.getWords().size();
     }
 
 }
