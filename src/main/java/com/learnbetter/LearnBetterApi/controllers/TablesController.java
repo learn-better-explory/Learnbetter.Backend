@@ -12,6 +12,7 @@ import com.learnbetter.LearnBetterApi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,20 +52,37 @@ public class TablesController {
 
     @PostMapping("/{id}/addTable")
     @ResponseStatus(HttpStatus.CREATED)
-    public DefinitionsTable addDefinitionsTable(@PathVariable long id, @RequestBody DefinitionsTable definitionsTable){
+    public UUID addDefinitionsTable(@PathVariable long id, @RequestBody DefinitionsTable definitionsTable){
         User user = getUserFromId(id);
         definitionsTable.setOwner(user);
-
         tableService.addDefinitionsTableUser(definitionsTable);
 
-        return definitionsTable;
+        return definitionsTable.getTableId();
+    }
+
+    @DeleteMapping("/{id}/{tableId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteDefinitionsTable(@PathVariable long id, @PathVariable UUID tableId){
+        DefinitionsTable definitionsTable = tableService.getDefinitionsTableFromId(tableId);
+        checkDefTableCorrect(id, definitionsTable);
+
+        tableService.removeDefinitionsTable(definitionsTable);
+    }
+
+    @PutMapping("/{id}/{tableId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateDefinitionsTable(@PathVariable long id, @PathVariable UUID tableId, @RequestBody DefinitionsTable definitionsTable){
+        DefinitionsTable checkDefinitionsTable = tableService.getDefinitionsTableFromId(tableId);
+        System.out.println(checkDefinitionsTable);
+        checkDefTableCorrect(id, checkDefinitionsTable);
+
+        tableService.updateDefinitionsTable(tableId, definitionsTable);
     }
 
     @PostMapping("/{id}/{tableId}/addDefWord")
     @ResponseStatus(HttpStatus.CREATED)
     public void addWordDefinition(@PathVariable long id, @PathVariable UUID tableId, @RequestBody WordDefinition wordDefinition){
         DefinitionsTable definitionsTable = tableService.getDefinitionsTableFromId(tableId);
-
         checkDefTableCorrect(id, definitionsTable);
 
         wordDefinition.setDefTable(definitionsTable);

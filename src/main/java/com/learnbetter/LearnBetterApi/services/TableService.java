@@ -45,6 +45,20 @@ public class TableService {
         definitionsTableRepo.save(table);
     }
 
+    public void removeDefinitionsTable(DefinitionsTable definitionsTable){
+        List<WordDefinition> tableWords = definitionsTable.getWords();
+        wordsRepo.deleteAll(tableWords);
+
+        definitionsTableRepo.delete(definitionsTable);
+    }
+
+    public void updateDefinitionsTable(UUID tableId ,DefinitionsTable newTable){
+        DefinitionsTable oldTable = definitionsTableRepo.getReferenceById(tableId);
+        oldTable.setTableName(newTable.getTableName());
+        oldTable.setTableDescription(newTable.getTableDescription());
+
+        definitionsTableRepo.save(oldTable);
+    }
 
     public void addWordDefinition(WordDefinition wordDefinition){
         wordsRepo.save(wordDefinition);

@@ -18,7 +18,6 @@ public class DefinitionsTable {
     private UUID tableId;
     @Column( name = "owner")
     private long ownerId;
-    @Setter
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "owner", insertable = false, updatable = false)
@@ -30,6 +29,11 @@ public class DefinitionsTable {
 
     @OneToMany(mappedBy = "defTable", fetch = FetchType.EAGER)
     private List<WordDefinition> words;
+
+    public DefinitionsTable(){
+        this.tableId = generateNewUuid();
+        this.words = new ArrayList<>();
+    }
 
     public DefinitionsTable(User owner, String tableName, String tableDescription) {
         this.tableId = generateNewUuid();
@@ -49,6 +53,11 @@ public class DefinitionsTable {
 
     private UUID generateNewUuid(){
         return UUID.randomUUID();
+    }
+
+    public void setOwner(User owner){
+        this.owner = owner;
+        this.ownerId = owner.getId();
     }
 
     public int getDefinitionsCount(){
