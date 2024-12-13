@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * This is a class that stores the primary key of {@link WordDefinition}
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

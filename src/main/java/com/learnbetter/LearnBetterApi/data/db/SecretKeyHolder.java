@@ -8,6 +8,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * This class holds the secret that is used in the JwtService
+ * to generate the keys.
+ * @see JwtService
+ */
 @Entity
 @Table(name = "key_holder")
 @Getter

@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This is a controller which defines all of the endpoints
+ * for actions related to user managing. It allows requests
+ * to get the JWT token of a user and to create a new user.
+ */
 @RestController
 @RequestMapping(path = LearnBetterApiApplication.API_PATH)
 public class LoginController {
@@ -30,6 +35,12 @@ public class LoginController {
         return userService.getUsers();
     }
 
+    /**
+     * Logins in the specified user using the {@link UserService#loginUser(User)} method.
+     * @param user The user to get the JWT token for.
+     * @return A map of the JWT token of the specified user with the key "token" and
+     *         the id of the user which has logged in with the key "id".
+     */
     @PostMapping(value = "/login")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object> login(@RequestBody User user){
@@ -41,6 +52,11 @@ public class LoginController {
         return Map.of("token",userService.loginUser(user), "id" , realUser.getId());
     }
 
+    /**
+     * Registers (adds) a new user to the database using the {@link UserService#addUser(User)}
+     * method.
+     * @return The registered user.
+     */
     @PostMapping(value = "/register")
     @ResponseStatus(HttpStatus.CREATED)
     public User register(@RequestBody User user){

@@ -18,6 +18,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * This service. is responsible for logging, registering users and getting them. <br>
+ * It only interacts with the database to get the {@link User} objects from it, 
+ * the authorization part of this application logic is handled in {@link JwtService}.
+ * @see JwtService
+ */
 @Service
 public class UserService {
 
@@ -40,7 +46,12 @@ public class UserService {
         this.userDetailsService = userDetailsService;
     }
 
-
+    /**
+     * Gets the user with the id provided from the database. <br>
+     * @param id The id to get the user with.
+     * @throws UserNotFoundException When it could not find a user with the specified
+     *                               id. 
+     */
     @PostAuthorize("returnObject.getUsername() == authentication.name")
     public User getUser(long id){
         User user = userRepo.findById(id).orElse(null);
@@ -51,6 +62,11 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Gets the user from the database with the specified username.
+     * @param username The username to get the user for.
+     * @return THe user with the specififed username or null if none found.
+     */
     public User getUserByUsername(String username){
         User user;
         try{
@@ -61,6 +77,17 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Gets the user from the database and checks if it exists
+     * and if the passwords match. After that it generates a unique JWT token
+     * to identify the user using {@link JwtService#generateToken(UserDetails)}.
+     * @param user The user to login to generate the token for.
+     * @return The generated JWT token which identifies the user in the system.
+     * @throws PasswordDoesntMatchException When the password for the provided user
+     *                                      does not match the password for the user got from
+     *                                      the database.
+     * @see JwtService
+     */
     public String loginUser(User user){
         User foundUser = getUserByUsername(user.getUsername());
         if(!securityConfig.getPasswordEncoder().matches(user.getPassword(), foundUser.getPassword()))
@@ -72,7 +99,18 @@ public class UserService {
     }
 
 
-
+    /**
+     * Adds (registers) a new user to the database. 
+     * This functions checks if the user already exists and if the data
+     * is formated correctly to ensure integrity.
+     * @param user The user to add to the database
+     * @return The created user.
+     * @throws WrongRegisterDataException When the data of user provided is incorrect. This means:<br>
+     *                                    The email does not have the @ sign or . the url part <br>
+     *                                    The username contains spaces. Returns http code 400
+     * @throws UserAlreadyExistsException When the password of the passed user does not match the password
+     *                                    of the user saved in the database. Returns http code 403
+     */
     public User addUser(User user){
         if(user == null)
             return null;
@@ -91,10 +129,17 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Gets all users. (Probably going to remove it soon)
+     */
     public List<User> getUsers(){
         return userRepo.findAll();
     }
 
+    /**
+     * Verifies the user data, it checks the username and email. <br>
+     * For more detail check out {@link UserService#addUser(User)}
+     */
     private boolean verifyUserData(User user){
         if(user.getUsername().contains(" ")) return false;
         if(!user.getEmail().contains("@")) return false;

@@ -6,6 +6,16 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Holds the status of a user, this means basic account data
+ * like:
+ * <ul>
+ *  <li> Is the account expired </li>
+ *  <li> Is this account locked</li>
+ *  <li> Are their credentials (username, password) expired </li>
+ *  <li> Is this account enabled</li>
+ * </ul>
+ */
 @Entity
 @Table(name = "user_status")
 @Getter
