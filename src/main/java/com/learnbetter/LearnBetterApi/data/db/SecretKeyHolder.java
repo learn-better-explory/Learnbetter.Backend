@@ -11,7 +11,7 @@ import lombok.Setter;
 /**
  * This class holds the secret that is used in the JwtService
  * to generate the keys.
- * @see JwtService
+ * @see com.learnbetter.LearnBetterApi.services.JwtService
  */
 @Entity
 @Table(name = "key_holder")

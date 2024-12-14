@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This is a controller which defines all of the endpoints
+ * This is a controller which defines all the endpoints
  * for actions related to user managing. It allows requests
  * to get the JWT token of a user and to create a new user.
  */

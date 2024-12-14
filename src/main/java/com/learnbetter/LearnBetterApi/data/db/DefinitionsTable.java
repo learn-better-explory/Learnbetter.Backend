@@ -10,13 +10,13 @@ import java.util.UUID;
 
 
 /**
- * This class represents a table which holds all of the words and their
+ * This class represents a table which holds all the words and their
  * definitions from which user can learn and play games. This is the 
  * most basic entity which allows user to create words and interact with<br>
  * Every table's id is a random UUID which is generated at construction. <br>
  * Every table also stores their name, description and an owner - a {@link User} which
  * has every right to every operation on this table. It also holds from a relation in the
- * {@link WordDefintion} table every word definition that it contains.
+ * {@link WordDefinition} table every word definition that it contains.
  */
 @Getter
 @Entity
@@ -47,7 +47,7 @@ public class DefinitionsTable {
     }
 
     /**
-     * Creates a new instance of the {@link DefinitionTable}. <br>
+     * Creates a new instance of the {@link DefinitionsTable}. <br>
      * It generates a random id for this table.
      * @param owner The user which has all the rights for this table. It is the user 
      *              who created the table.

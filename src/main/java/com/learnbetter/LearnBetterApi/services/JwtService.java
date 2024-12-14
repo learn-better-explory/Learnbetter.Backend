@@ -28,7 +28,7 @@ public class JwtService {
 
     /**
      * Creates a new JwtService. 
-     * @param keyRepo The reposiotry to get the stored key from.
+     * @param keyRepo The repository to get the stored key from.
      */
     @Autowired
     public JwtService(KeyHolderRepo keyRepo) throws NoSuchAlgorithmException {
@@ -47,10 +47,10 @@ public class JwtService {
 
     /**
      * Verifies the given key using the user details provided. <br>
-     * It decrypts the key and checks if the uername of it is the same as the username of user details
+     * It decrypts the key and checks if the username of it is the same as the username of user details
      * and if the issued at date is before the current date.
      * @param token The token to verify
-     * @param UserDetails The user details to verify againts.
+     * @param userDetails The user details to verify against.
      * @return If the token is valid and for this user or not.
      */
     public boolean verify(String token, UserDetails userDetails){
@@ -97,7 +97,7 @@ public class JwtService {
 
     /**
      * Gets the key from the secret stored in this class. <br>
-     * It uses the hmacSha algorythm to encode it.
+     * It uses the hmacSha algorithm to encode it.
      * @return The generated key.
      */
     private SecretKey getKey(){

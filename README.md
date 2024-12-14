@@ -29,11 +29,6 @@ This is the api endpoint for login in for already existing users. If successful 
     "password": "Password",
 }
 ```
-### Response codes
- * ***202*** - when the user is successfully authenticated based on the info in the request body. It will return a JWT token for every other authentication request for this site.
- * ***400*** - when the user provided doesn't exist in the database of the application.
- * ***403*** - when the password provided doesn't match the password stored in the database.
- * 
 ### Response
 Returns the Authentication token for this user and their id in the format showed below.
 The Authorization token should be put in the ***Authorization*** header with format "Bearer <token>"
@@ -43,3 +38,94 @@ The Authorization token should be put in the ***Authorization*** header with for
     "id": 1
 }
 ```
+
+### Response codes
+ * ***202*** - when the user is successfully authenticated based on the info in the request body. It will return a JWT token for every other authentication request for this site.
+ * ***400*** - when the user provided doesn't exist in the database of the application.
+ * ***403*** - when the password provided doesn't match the password stored in the database.
+
+## /{userId}/addTable (POST)
+Creates a new definitions table in the database based on the body of the request which is shown below. Every definition table is identified
+by a random UUID. Every table stores words and their definitions in them. Template for post:
+```
+{
+    "tableName": "Example",
+    "tableDescription": "This is an example table description"
+}
+```
+The title of a table cannot be more than 100 characters.
+
+### Response
+After successful creation it returns the UUID of the table formated like:
+```
+{
+    "tableId": "<table UUID>"
+}
+```
+
+### Response codes
+ * ***201*** - when the table is successfully created
+ * ***400*** - when the title of the table is not provided.
+ * ***401*** - when the authorized user's id does not match the userId provided.
+
+## /{userId}/{tableId} (GET, PUT, DELETE)
+This endpoint specifies different methods that can be used to access it.
+ * ***GET*** - Returns the definitions table object found in the database with the id provided. The template returned should look like:
+```
+{
+    "tableId": "5e3895b1-f360-4cb5-a7b9-6b04d0651fb5",
+    "ownerId": 1,
+    "tableName": "Example table",
+    "tableDescription": "Example description for table",
+    "words": [],
+    "definitionsCount": 0
+}
+```
+ * ***PUT*** - Updates the definitions table with the provided id. This method can only update the table's name and description. 
+               The request should be formated like:
+```
+{
+    "tableName": "New example",
+    "tabeDescription": "This is an updated description for this table"
+}
+```
+ * ***DELETE*** - Deletes the definitions table with the id provided from the database.
+
+### Response codes
+All the methods return the same http status codes, which mean:
+ * ***200*** - The method was successfully processed.
+ * ***400*** - If a definitions table with the specified id does not exist
+ * ***403*** - If the user with the id provided is not the owner of the definitions table.
+
+## /{userId}/{tableId}/addDefWord (POST)
+This endpoint is used for the addition of a new word definition to a definitions table.  The body of the request should look like:
+```
+{
+    "word": "Example",
+    "description": "This is an example word"
+}
+```
+
+### Response codes
+ * ***201*** - On successful creation
+ * ***400*** - When the word or its description was not provided.
+ * ***401*** - When the authorized user id does not match the provided id.
+
+## /{userId}/{tableId}/{orderInTable} (PUT, DELETE)
+This endpoint accepts the PUT and DELETE methods to do modification on words stored in definitions tables. The {orderInTable} variable
+means the place which the word is in the table. (For example if we have an array of words [\"word1\",\"word2\",\"word3\"] the "word2" word would
+be in the 1st place)
+ * ***PUT*** - Allows the editing of the word - you can only edit the literal word and its description only. The request body should look like:
+```
+{
+    "word": "A new word",
+    "description": "A new description :o"
+}
+```
+ * ***DELETE*** - Deletes the specified word from the definitions table.
+
+### Response codes
+All the methods return the same http status codes, which mean:
+ * ***200*** - The method was successfully processed.
+ * ***400*** - When could not find the table or the word definition in the database.
+ * ***401*** - When the authorized user id does not match the provided id.

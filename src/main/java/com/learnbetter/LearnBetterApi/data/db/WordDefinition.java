@@ -10,7 +10,7 @@ import java.util.UUID;
  * This entity represents a word and its definition which is stored in a
  * {@link DefinitionsTable}. This class is referenced by a relation in the table
  * to make it automatically add and remove them.  This class stores its order in the table, 
- * whic means at which position is it located in the edit view. It also stored
+ * which means at which position is it located in the edit view. It also stored
  * the original table that it is in. Every word entity can only be in one table class, 
  * if you want to create the same word for two different tables they have to be duplicated.
  */
@@ -41,7 +41,7 @@ public class WordDefinition {
     /**
      * Creates a new instance of a word definition.
      * @param defTable The table that it resides in.
-     * @param word The word that is stored in this definition. It can have max lenght of 40.
+     * @param word The word that is stored in this definition. It can have max length of 40.
      * @param description The definition of this word.
      */
     public WordDefinition(DefinitionsTable defTable, String word, String description) {
@@ -54,8 +54,8 @@ public class WordDefinition {
 
     /**
      * Sets the word for this definition. <br>
-     * <b>The word cannot be longer that 40 chars if it is it is going
-     * to be cut to the lenght of 40</b> 
+     * <b>The word cannot be longer than 40 chars if it is going
+     * to be cut to the length of 40</b>
      */
     public void setWord(String word){
         this.word = word.length() > 40 ? word.substring(0,40) : word;

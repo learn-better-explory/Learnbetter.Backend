@@ -65,4 +65,14 @@ public class GlobalControllerExceptionHandler {
     public ResponseEntity<?> handleWordNoExist(){
         return new ErrorMessage("This word is not present in the specified table!", HttpStatus.BAD_REQUEST).wrap();
     }
+
+    @ExceptionHandler(BadTableValuesException.class)
+    public ResponseEntity<?> handleBadTableFormat(BadTableValuesException e){
+        return new ErrorMessage(e.getMessage(), HttpStatus.BAD_REQUEST).wrap();
+    }
+
+    @ExceptionHandler(BadWordDefValuesException.class)
+    public ResponseEntity<?> handeBadWordFormat(){
+        return new ErrorMessage("Either the word was null or its description", HttpStatus.BAD_REQUEST).wrap();
+    }
 }

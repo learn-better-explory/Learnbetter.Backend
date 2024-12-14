@@ -5,6 +5,8 @@ import com.learnbetter.LearnBetterApi.data.db.User;
 import com.learnbetter.LearnBetterApi.data.db.WordDefinition;
 import com.learnbetter.LearnBetterApi.data.repositories.DefinitionsTableRepo;
 import com.learnbetter.LearnBetterApi.data.repositories.WordDefinitionsRepo;
+import com.learnbetter.LearnBetterApi.exceptions.BadTableValuesException;
+import com.learnbetter.LearnBetterApi.exceptions.BadWordDefValuesException;
 import com.learnbetter.LearnBetterApi.exceptions.DefinitionWordNotExists;
 import com.learnbetter.LearnBetterApi.exceptions.TitleTooLongException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ import java.util.UUID;
  * This service is responsible for handling the {@link DefinitionsTable} relationship
  * with database. It should be used for getting the tables from database, adding them, deleting and
  * updating. <br>
- * It also handles the {@link WordDefiniton} relationship with tables. It manages their order in the table
+ * It also handles the {@link WordDefinition} relationship with tables. It manages their order in the table
  * while deleting or updating. 
  */
 @Service
@@ -38,7 +40,7 @@ public class TableService {
      * Gets all the {@link DefinitionsTable}s that the user with the provided userId
      * owns.
      * @param userId The id of the user.
-     * @return All of the definition tables that the user is the owner of.
+     * @return All the definition tables that the user is the owner of.
      */
     public List<DefinitionsTable> getUserDefinitionsTables(long userId){
         return definitionsTableRepo.findByOwner(userService.getUser(userId));
@@ -60,6 +62,14 @@ public class TableService {
      * @param table The table to add to the database.
      */
     public void addDefinitionsTableUser(long userId ,DefinitionsTable table){
+
+        if(table.getTableName() == null){
+            throw new BadTableValuesException("The title for this table cannot be null!");
+        }
+        if(table.getTableDescription() == null){
+            table.setTableDescription("");
+        }
+
         if(table.getTableName().length() > 100){
             throw new TitleTooLongException("The title for the table " + table.getTableId() + " is too long!");
         }
@@ -98,9 +108,13 @@ public class TableService {
     /**
      * Adds a new word definition to the database and table specified in the
      * {@link WordDefinition#getDefTable}.
-     * @param WordDefinition The word to add.
+     * @param wordDefinition The word to add.
      */
     public void addWordDefinition(WordDefinition wordDefinition){
+        if(wordDefinition.getWord() == null || wordDefinition.getDescription() == null){
+            throw new BadWordDefValuesException();
+        }
+
         wordsRepo.save(wordDefinition);
     }
 
@@ -134,7 +148,7 @@ public class TableService {
      * When we would delete the second one this function would rearrange
      * the numbers to be in sequence, so for this example it would write:
      * <pre> {@code [0,1,2,3]} </pre>
-     * @param tableId The id of the tble to remove the word definiton from
+     * @param tableId The id of the table to remove the word definition from
      * @param orderTable The position of the word in the table.
      * @throws DefinitionWordNotExists If the function couldn't find the word definition in the database by
      *                                 its order and the tableId. 

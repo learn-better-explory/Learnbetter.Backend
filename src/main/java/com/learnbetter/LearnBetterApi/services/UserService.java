@@ -65,7 +65,7 @@ public class UserService {
     /**
      * Gets the user from the database with the specified username.
      * @param username The username to get the user for.
-     * @return THe user with the specififed username or null if none found.
+     * @return THe user with the specified username or null if none found.
      */
     public User getUserByUsername(String username){
         User user;
@@ -81,7 +81,7 @@ public class UserService {
      * Gets the user from the database and checks if it exists
      * and if the passwords match. After that it generates a unique JWT token
      * to identify the user using {@link JwtService#generateToken(UserDetails)}.
-     * @param user The user to login to generate the token for.
+     * @param user The user to log in to generate the token for.
      * @return The generated JWT token which identifies the user in the system.
      * @throws PasswordDoesntMatchException When the password for the provided user
      *                                      does not match the password for the user got from
