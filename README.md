@@ -68,6 +68,28 @@ After successful creation it returns the UUID of the table formated like:
  * ***400*** - when the title of the table is not provided.
  * ***401*** - when the authorized user's id does not match the userId provided.
 
+## /{userId}/tables (GET)
+Returns all the tables that a user owns. The userId variable is the user to get the tables for
+
+### Response
+After successful creation it returns the UUID of the table formated like:
+```
+{
+    [
+        "tableId": "5e3895b1-f360-4cb5-a7b9-6b04d0651fb5",
+        "ownerId": 1,
+        "tableName": "Example table",
+        "tableDescription": "Example description for table",
+        "words": [],
+        "definitionsCount": 0
+    ]
+}
+```
+### Response codes
+* ***200*** - The method was successfully processed.
+* ***403*** - If the user with the id provided is not the owner of the definitions table.
+
+
 ## /{userId}/{tableId} (GET, PUT, DELETE)
 This endpoint specifies different methods that can be used to access it.
  * ***GET*** - Returns the definitions table object found in the database with the id provided. The template returned should look like:

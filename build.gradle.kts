@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.learnbetter"
-version = "0.0.4-SNAPSHOT"
+version = "0.0.5-SNAPSHOT"
 
 java {
 	toolchain {
