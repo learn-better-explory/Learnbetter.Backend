@@ -44,7 +44,7 @@ public class TablesController {
     }
 
     /**
-     * Gets the table with the specfied id.
+     * Gets the table with the specified id.
      * @param id The id of the owner of the table
      * @param tableId The id of the table.
      * @throws DefinitionsTableException When the table is not found. Returns http code 400
