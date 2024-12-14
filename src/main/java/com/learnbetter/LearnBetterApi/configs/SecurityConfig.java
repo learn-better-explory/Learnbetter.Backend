@@ -42,9 +42,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain getChain(HttpSecurity http) throws Exception {
         return http
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer ->
-                        customizer.requestMatchers("/api/v1/register", "/api/v1/login").permitAll()
+                        customizer.requestMatchers("/api/v1/register", "/api/v1/login", "/api/v1/users-test").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
@@ -59,8 +60,6 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(@NotNull CorsRegistry registry) {
                 registry.addMapping("/**").allowedOrigins("http://localhost:5173");
-                registry.addMapping("/**/**").allowedOrigins("http://localhost:5173");
-                registry.addMapping("/**/**/**").allowedOrigins("http://localhost:5173");
             }
         };
     }
